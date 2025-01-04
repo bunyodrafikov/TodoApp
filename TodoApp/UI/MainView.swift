@@ -8,19 +8,31 @@
 import SwiftUI
 
 struct MainView: View {
-  @StateObject var viewModel: MainViewModel = MainViewModel()
+  @StateObject private var viewModel = MainViewModel()
+  @State private var isAddingTask = false
 
   var body: some View {
-    VStack {
+    NavigationView {
       List {
-        ForEach(viewModel.tasks, id: \.self) { task in
-          Text(task)
+        ForEach(viewModel.tasks) { task in
+          TaskItem(task: task, onToggleTaskCompletion: viewModel.toggleTaskCompletion(_:))
         }
       }
+      .navigationTitle("Tasks")
+      .toolbar {
+        ToolbarItem(placement: .navigationBarTrailing) {
+          Button(action: { isAddingTask = true }) {
+            Image(systemName: "plus")
+          }
+        }
+      }
+      .sheet(isPresented: $isAddingTask) {
+        AddTaskView(viewModel: viewModel, isPresented: $isAddingTask)
+      }
     }
-    .padding()
   }
 }
+
 
 #Preview {
   MainView()

@@ -7,8 +7,10 @@
 
 import Foundation
 
-struct Task {
-  let deadline: Date
-  let title: String
-  let description: String
+struct Task: Identifiable, Codable, Hashable {
+  var id: UUID = UUID()
+  var title: String
+  var description: String
+  var deadline: Date
+  var isCompleted: Bool = false
 }
